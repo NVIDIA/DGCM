@@ -165,7 +165,9 @@ void DcgmPolicyManager::SetViolation(DcgmViolationPolicyAlert_t alertType,
         if (!(watcherIt->conditions & response->condition))
             continue;
 
-        if (timestamp - watcherIt->lastSentTimestamp[alertType] < minimumSignalTimeDiff)
+        // Skip time interval check if alertType is DCGM_VIOLATION_POLICY_FAIL_XID
+        if (alertType != DCGM_VIOLATION_POLICY_FAIL_XID &&
+            timestamp - watcherIt->lastSentTimestamp[alertType] < minimumSignalTimeDiff)
         {
             log_debug("Not violating type {} due to timestamp difference being < {}",
                       alertType,
